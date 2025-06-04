@@ -30,7 +30,7 @@
   <ItemGroup>
     <Compile Include="../Controllers/LoginController.cs" Link="Controllers/LoginController.cs" />
     <Compile Include="../Controllers/UsuarioController.cs" Link="Controllers/UsuarioController.cs" />
-    <Compile Include="Stubs/*.cs" />
+    <!-- <Compile Include="Stubs/*.cs" /> -->
   </ItemGroup>
 
   <ItemGroup>
