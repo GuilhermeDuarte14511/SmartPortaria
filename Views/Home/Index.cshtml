@@ -1,0 +1,181 @@
+﻿@{
+    ViewData["Title"] = "Painel de Controle";
+}
+
+<!-- Página principal -->
+<div id="homePage" class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-dark">SmartPortaria</h1>
+        <p class="lead text-secondary">Painel de controle administrativo. Bem-vindo, <strong>@User.Identity?.Name</strong>!</p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+
+        <!-- Card: Cadastrar Usuário (abre modal) -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-lg h-100 border-0">
+                <div class="card-body text-center">
+                    <i class="fas fa-user-plus fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title fw-bold">Cadastrar Usuário</h5>
+                    <p class="card-text text-muted">Registre novos moradores, visitantes ou prestadores.</p>
+                    <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalCadastrarUsuario">Cadastrar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card: Reconhecimento Facial -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-lg h-100 border-0">
+                <div class="card-body text-center">
+                    <i class="fas fa-smile fa-3x text-info mb-3"></i>
+                    <h5 class="card-title fw-bold">Reconhecimento Facial</h5>
+                    <p class="card-text text-muted">Acesse o módulo de identificação facial da portaria.</p>
+                    <button class="btn btn-info text-white w-100" data-bs-toggle="modal" data-bs-target="#modalReconhecimentoFacial">Iniciar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-lg h-100 border-0">
+                <div class="card-body text-center">
+                    <i class="fas fa-video fa-3x text-success mb-3"></i>
+                    <h5 class="card-title fw-bold">Monitoramento</h5>
+                    <p class="card-text text-muted">Visualize as câmeras e eventos em tempo real.</p>
+                    <a href="/Monitoramento/Index" class="btn btn-success w-100">Visualizar</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-lg h-100 border-0">
+                <div class="card-body text-center">
+                    <i class="fas fa-list-alt fa-3x text-warning mb-3"></i>
+                    <h5 class="card-title fw-bold">Registros de Acesso</h5>
+                    <p class="card-text text-muted">Consulte logs de entrada e saída por data e placa.</p>
+                    <a href="/Recibos/Index" class="btn btn-warning w-100">Consultar</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-lg h-100 border-0">
+                <div class="card-body text-center">
+                    <i class="fas fa-cogs fa-3x text-secondary mb-3"></i>
+                    <h5 class="card-title fw-bold">Configurações</h5>
+                    <p class="card-text text-muted">Personalize regras de acesso, notificações e mais.</p>
+                    <a href="/Configuracoes/Index" class="btn btn-secondary w-100">Abrir</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal de Cadastro de Usuário -->
+<div class="modal fade" id="modalCadastrarUsuario" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cadastrar Novo Usuário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formCadastroUsuario">
+                    <div class="row g-3">
+                        <!-- Nome -->
+                        <div class="col-md-6">
+                            <label class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="Nome" required />
+                        </div>
+
+                        <!-- Documento -->
+                        <div class="col-md-6">
+                            <label class="form-label">Documento</label>
+                            <input type="text" class="form-control" id="Documento" required />
+                        </div>
+
+                        <!-- Email -->
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="Email" />
+                        </div>
+
+                        <!-- Tipo de Usuário -->
+                        <div class="col-md-6">
+                            <label class="form-label">Tipo</label>
+                            <select class="form-select" id="Tipo" required>
+                                <option value="">Selecione o tipo</option>
+                                <option value="0">Morador</option>
+                                <option value="1">Visitante</option>
+                            </select>
+                        </div>
+
+                        <!-- Endereço (somente Morador) -->
+                        <div class="col-md-12" id="EnderecoDiv" style="display: none;">
+                            <label class="form-label">Endereço Residencial</label>
+                            <input type="text" class="form-control" id="Endereco" />
+                        </div>
+
+                        <!-- Observação (somente Visitante) -->
+                        <div class="col-md-12" id="ObservacaoDiv" style="display: none;">
+                            <label class="form-label">Observação</label>
+                            <textarea class="form-control" id="Observacao" rows="3"></textarea>
+                        </div>
+
+                        <!-- Reconhecimento Facial -->
+                        <div class="col-md-12">
+                            <label class="form-label">Reconhecimento Facial</label>
+                            <div class="position-relative">
+                                <video id="video" autoplay muted playsinline width="100%" class="border rounded"></video>
+                                <canvas id="overlay" class="position-absolute top-0 start-0" style="z-index: 10;"></canvas>
+                            </div>
+                            <div id="previewContainer" class="mt-3 d-none">
+                                <label class="form-label">Preview da Foto Capturada</label>
+                                <img id="previewImage" class="img-thumbnail w-100 mb-2" />
+                                <button type="button" class="btn btn-outline-warning" onclick="retirarFoto()">Tirar Foto Novamente</button>
+                            </div>
+                            <canvas id="canvas" class="d-none"></canvas>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button class="btn btn-primary" onclick="salvarUsuario()">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Reconhecimento Facial -->
+<div class="modal fade" id="modalReconhecimentoFacial" tabindex="-1" aria-labelledby="modalReconhecimentoFacialLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reconhecimento Facial</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    <p class="text-muted">Posicione o rosto em frente à câmera e aguarde a identificação automática.</p>
+                </div>
+
+                <div class="position-relative">
+                    <video id="videoReconhecimento" autoplay muted playsinline width="100%" class="border rounded"></video>
+                    <canvas id="overlayReconhecimento" class="position-absolute top-0 start-0" style="z-index: 10;"></canvas>
+                </div>
+
+                <div class="mt-4 text-center d-none" id="reconhecimentoResultado">
+                    <h5>Usuário Reconhecido:</h5>
+                    <p class="fw-bold mb-1" id="nomeReconhecido">-</p>
+                    <p class="text-muted mb-1" id="tipoReconhecido">-</p>
+                    <p class="text-muted" id="enderecoOuObsReconhecido">-</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
