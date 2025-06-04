@@ -3,7 +3,8 @@ using Moq;
 using SmartPortaria.Application.DTOs;
 using SmartPortaria.Application.Interfaces;
 using SmartPortaria.Controllers;
-
+using SmartPortaria.Domain.Entities;
+using Xunit;
 namespace SmartPortaria.Tests;
 
 public class LoginControllerTests
@@ -24,7 +25,7 @@ public class LoginControllerTests
     {
         var serviceMock = new Mock<IAdminService>();
         serviceMock.Setup(s => s.ObterPorEmailAsync("admin@test"))
-                    .ReturnsAsync(new AdminDto { Id = Guid.NewGuid(), Nome = "Admin", Email = "admin@test" });
+           .ReturnsAsync(new Admin { Id = Guid.NewGuid(), Nome = "Admin", Email = "admin@test", SenhaHash = "hash...", Ativo = true });
         serviceMock.Setup(s => s.VerificarLoginAsync("admin@test", "wrong"))
                     .ReturnsAsync(false);
         var controller = new LoginController(serviceMock.Object);

@@ -5,7 +5,7 @@ using SmartPortaria.Application.DTOs;
 using SmartPortaria.Application.Interfaces;
 using SmartPortaria.Controllers;
 using System.Security.Claims;
-
+using Xunit;
 namespace SmartPortaria.Tests;
 
 public class UsuarioControllerTests
@@ -31,7 +31,7 @@ public class UsuarioControllerTests
             HttpContext = new DefaultHttpContext()
         };
 
-        var req = new UsuarioCadastroModalRequest { Nome = "Teste", Documento = "123", VetorFacial = new float[] { 1 } };
+        var req = new UsuarioCadastroModalRequest { Nome = "Teste", Documento = "123", VetorFacial = System.Text.Json.JsonSerializer.Serialize(new float[] { 1 }) };
         var result = await controller.CadastrarViaModal(req);
 
         Assert.IsType<UnauthorizedObjectResult>(result);
@@ -52,7 +52,12 @@ public class UsuarioControllerTests
             }
         };
 
-        var req = new UsuarioCadastroModalRequest { Nome = "Teste", Documento = "123", VetorFacial = new float[] { 1 } };
+        var req = new UsuarioCadastroModalRequest
+        {
+            Nome = "Teste",
+            Documento = "123",
+            VetorFacial = System.Text.Json.JsonSerializer.Serialize(new float[] { 1 })
+        };
         var result = await controller.CadastrarViaModal(req);
 
         Assert.IsType<OkObjectResult>(result);
