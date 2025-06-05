@@ -1,41 +1,59 @@
 # SmartPortaria
 
-SmartPortaria is an ASP.NET Core MVC application designed to manage access control. It provides administrator registration and login, user management with facial recognition support and session-based authentication.
+SmartPortaria é uma aplicação ASP.NET Core MVC voltada para o controle de acesso em condomínios e empresas. O sistema permite cadastrar administradores, gerenciar usuários com suporte a reconhecimento facial e controlar sessões de login por meio de cookies.
 
-## Prerequisites
+## Pré-requisitos
 
-- .NET SDK 10.0 or later
-- A SQL Server instance
+- .NET SDK 10.0 ou superior
+- Instância do SQL Server
 
-## Configuration
+## Configuração
 
-1. Clone this repository and restore dependencies.
-2. Set the database connection string in `appsettings.json` under `ConnectionStrings:DefaultConnection` or provide it via the environment variable `ConnectionStrings__DefaultConnection`.
-3. Optionally set `ASPNETCORE_ENVIRONMENT` to `Development` or `Production`.
+1. Clone este repositório e restaure as dependências.
+2. Defina a string de conexão do banco em `appsettings.json` no caminho `ConnectionStrings:DefaultConnection` ou forneça-a via variável de ambiente `ConnectionStrings__DefaultConnection`.
+3. Opcionalmente ajuste `ASPNETCORE_ENVIRONMENT` para `Development` ou `Production`.
 
-## Running the Application
+## Executando a aplicação
 
-Execute the following commands in the project directory:
+No diretório do projeto execute:
 
 ```bash
-# build the solution
+# compilação da solução
  dotnet build SmartPortaria.sln
 
-# run the web application
+# execução da aplicação web
  dotnet run --project SmartPortaria.csproj
 ```
 
-The application will start and be accessible at `https://localhost:5001` by default (port may vary).
+Após o início o site fica acessível em `https://localhost:5001` (a porta pode variar).
 
-## Major Features
+## Executando os testes unitários
 
-- Administrator registration and login
-- Cookie based authentication and session management
-- User registration with facial data
-- Facial recognition endpoint for identifying registered users
+Para rodar os testes utilize:
 
-## Environment Variables
+```bash
+dotnet test SmartPortaria.sln
+```
 
-- `ConnectionStrings__DefaultConnection` – overrides the database connection string
-- `ASPNETCORE_ENVIRONMENT` – sets the runtime environment (`Development`, `Staging`, `Production`)
+## Funcionalidades principais
 
+- Cadastro e autenticação de administradores
+- Gerenciamento de usuários com armazenamento de dados faciais
+- Reconhecimento facial para identificação rápida
+- Autenticação baseada em cookie e controle de sessão
+
+## Arquitetura
+
+O projeto segue a arquitetura em camadas, separando responsabilidades em:
+
+- **Controllers**: expõem os endpoints MVC.
+- **Serviços de aplicação**: regras de negócio e orquestração.
+- **Repositórios**: acesso ao banco de dados via Entity Framework.
+- **Camada de domínio**: entidades e contratos que definem o modelo de dados (não incluída integralmente neste repositório).
+
+Essa estrutura facilita a manutenção e a evolução do código.
+
+## Variáveis de ambiente
+
+- `ConnectionStrings__DefaultConnection` – sobrescreve a string de conexão do banco
+- `ASPNETCORE_ENVIRONMENT` – define o ambiente de execução (`Development`, `Staging`, `Production`)
